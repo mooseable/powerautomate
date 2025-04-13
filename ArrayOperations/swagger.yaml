@@ -1,0 +1,60 @@
+swagger: '2.0'
+info:
+  title: ArrayOperations
+  description: Smart utility for summing numeric fields in JSON structures via schema.
+  version: '1.0'
+host: example.com
+basePath: /
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /sumBySchema:
+    post:
+      summary: Sum values dynamically using a schema from an array or object-of-arrays
+      operationId: sumBySchema
+      x-ms-code:
+        name: ArrayOperationsCode
+        language: CSharp
+        source: array-operations.csx
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              array:
+                type: array
+                items: {}
+                description: Optional flat array of objects to process.
+              object:
+                type: object
+                additionalProperties:
+                  type: array
+                  items: {}
+                description: Optional object-of-arrays structure.
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                description: Schema mapping fields to sum.
+      responses:
+        '200':
+          description: Summation results
+          schema:
+            type: object
+            additionalProperties:
+              type: number
+        '400':
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
